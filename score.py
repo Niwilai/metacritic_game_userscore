@@ -2,15 +2,22 @@
 
 from lxml import html
 import requests
-import sys
 
 headers = { 'User-Agent': 'needed' }
-recent = len(sys.argv)
+platforms = "all ps4 xboxone switch pc wii-u 3ds vita ios"
+platform = raw_input("What platform do you want to display? Possible options: {}\n".format(platforms))
 
-if recent > 1:
-    url = 'http://www.metacritic.com/g00/browse/games/score/metascore/90day/ps4/filtered'
+if platform not in platforms:
+    print("You mistyped the platform or it is not supported..")
+    quit()
 else:
-    url = 'http://www.metacritic.com/g00/browse/games/score/metascore/all/ps4/filtered'
+    time = raw_input("Limit score to last 90days? y/n \n")
+
+    if time == "y":
+        time = "90day"
+    else:
+        time = "all"
+    url = 'http://www.metacritic.com/g00/browse/games/score/metascore/{}/{}/filtered'.format(time, platform)
 
 page = requests.get(url, headers=headers)
 
@@ -21,10 +28,10 @@ rating_arr = tree.xpath("//div[contains(@class, 'product_row game')]/div[contain
 combined_arr = []
 
 for idx, val in enumerate(titles_arr):
-    combined_arr.append([val, rating_arr[idx]])
+    if not rating_arr[idx] == "tbd":
+        combined_arr.append([val, rating_arr[idx]])
 
 sorted_arr = sorted(combined_arr, key=lambda x: x[1], reverse=True)
 
 for idx, val in enumerate(sorted_arr):
-    if not val[1] == "tbd":
-        print("%s || Userscore: %s \n" % (val[0].strip(), val[1].strip()))
+    print("Platz %s || %s || Userscore: %s \n" % (idx + 1, val[0].strip(), val[1].strip()))
