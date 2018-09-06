@@ -4,10 +4,9 @@ It annoys me that I cannot search PS4 games by User score on Metacritic, little 
 Edit: Pretty much redundant now as one can now filter by User score!
 
 # Usage
-python score.py (any argument for recent games)
+python score.py (then follow instruction)
 
 # Dependencies
 - python2
 - lxml
 - requests
-- sys
